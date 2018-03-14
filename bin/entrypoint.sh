@@ -7,10 +7,10 @@ then
     nginx_path=/etc/nginx/certs
     mkdir -p $nginx_path
     echo -e "${NGINX_SERVER_KEY}" | tr '#' '\n' > $nginx_path/server.key
-    echo -e "${NGINX_SERVER_CRT}" | tr '#' '\n' > $nginx_path/server.crt
+    echo -e "${NGINX_SERVER_CRT}" | tr '#' '\n' > $nginx_path/server.pem
 
     chmod 444 $nginx_path/server.key
-    chmod 444 $nginx_path/server.crt
+    chmod 444 $nginx_path/server.pem
 fi
 
 exec "$@"

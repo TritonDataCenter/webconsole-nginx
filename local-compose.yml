@@ -7,3 +7,14 @@ webconsole-nginx:
   ports:
     - 80:80
     - 443:443
+  links:
+    - navigation:navigation
+    - instances:instances
+instances:
+  image: crccheck/hello-world
+  restart: always
+  mem_limit: 128m
+navigation:
+  image: crccheck/hello-world
+  restart: always
+  mem_limit: 128m

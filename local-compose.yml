@@ -1,4 +1,4 @@
-webconsole-nginx:
+nginx:
   build: ./
   restart: always
   mem_limit: 1g

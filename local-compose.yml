@@ -10,11 +10,47 @@ webconsole-nginx:
   links:
     - navigation:navigation
     - instances:instances
-instances:
-  image: crccheck/hello-world
+consul:
+  image: autopilotpattern/consul:1.0.0r43
+  command: >
+    /usr/local/bin/containerpilot
+  environment:
+   - CONSUL_DEV=1
+   - CONSUL=consul
+   - CONSUL_DATACENTER_NAME=dc1
   restart: always
-  mem_limit: 128m
+  mem_limit: 512m
+  ports:
+    - 8500:8500
+    - 9090:9090
 navigation:
-  image: crccheck/hello-world
+  image: joyent/webconsole-navigation:master
   restart: always
   mem_limit: 128m
+  ports:
+    - 8080:8080
+  env_file:
+    - .navigation.env
+  environment:
+    - PORT=8080
+    - CONSUL=consul
+    - BASE_URL=https://localhost
+    - NODE_ENV=development
+  links:
+    - consul:consul
+instances:
+  image: joyent/webconsole-instances:master
+  restart: always
+  mem_limit: 128m
+  ports:
+    - 8081:8081
+  env_file:
+    - .instances.env
+  environment:
+    - PORT=8081
+    - CONSUL=consul
+    - BASE_URL=https://localhost
+    - COOKIE_DOMAIN=localhost
+    - NODE_ENV=development
+  links:
+    - consul:consul

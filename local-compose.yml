@@ -10,6 +10,7 @@ nginx:
   links:
     - navigation:navigation
     - instances:instances
+    - images:images
 consul:
   image: autopilotpattern/consul:1.0.0r43
   command: >
@@ -38,6 +39,8 @@ navigation:
     - NODE_ENV=development
   links:
     - consul:consul
+  volumes:
+    - ./data:/opt/app/data:ro
 instances:
   image: joyent/webconsole-instances:master
   restart: always
@@ -48,6 +51,22 @@ instances:
     - .instances.env
   environment:
     - PORT=8081
+    - CONSUL=consul
+    - BASE_URL=https://localhost
+    - COOKIE_DOMAIN=localhost
+    - NODE_ENV=development
+  links:
+    - consul:consul
+images:
+  image: joyent/webconsole-images:master
+  restart: always
+  mem_limit: 128m
+  ports:
+    - 8082:8082
+  env_file:
+    - .images.env
+  environment:
+    - PORT=8082
     - CONSUL=consul
     - BASE_URL=https://localhost
     - COOKIE_DOMAIN=localhost
